@@ -18,7 +18,7 @@ void setup() {
 
   //ping the motors
   uint16_t model_number1 = 0;
-  dxl_wb.ping(1, &model_number1);
+  dxl_wb.ping(D1, &model_number1);
 
   Serial.begin(9600);
 }
@@ -32,12 +32,12 @@ void loop(){
     high = Serial.read();
 
     //control the motor from serial communication
-    dxl_wb.goalPosition(1, (int32_t)(low+high*256));
+    dxl_wb.goalPosition(D1, (int32_t)(low+high*256));
     delay(2000);
 
     //check position of the dynamixel
-    dxl_wb.readRegister(1, (uint16_t)36, (uint16_t)1, &get_data_1);
-    dxl_wb.readRegister(1, (uint16_t)37, (uint16_t)1, &get_data_2);
+    dxl_wb.readRegister(D1, (uint16_t)36, (uint16_t)1, &get_data_1);
+    dxl_wb.readRegister(D1, (uint16_t)37, (uint16_t)1, &get_data_2);
 
     //write position back to serial
     Serial.write((uint8_t)get_data_1);
