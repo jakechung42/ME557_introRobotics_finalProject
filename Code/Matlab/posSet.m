@@ -3,7 +3,7 @@ function[position] = posSet(serial, id, goalPos)
 
     low = mod(goalPos, 256);
     high = floor(goalPos/256);
-    
+
     fwrite(serial, id);
     fwrite(serial, low);
     fwrite(serial, high);
