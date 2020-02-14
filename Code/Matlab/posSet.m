@@ -8,6 +8,5 @@ function[position] = posSet(serial, id, goalPos)
     fwrite(serial, low);
     fwrite(serial, high);
     
-    
     position = (fread(serial, 1) + fread(serial, 1)*256);
 end
