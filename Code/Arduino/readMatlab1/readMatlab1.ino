@@ -1,5 +1,12 @@
 #include <DynamixelWorkbench.h>
 
+/*
+ * This script is for the serial communication with Matlab.
+ * It has 2 parts, depending on the bit sent, it wil be either reading or requesting position.
+ * Author: Jake Chung
+ * Winter 2020
+ * Portland State University
+ */
 //intiate the dxl instance
 DynamixelWorkbench dxl_wb;
 
