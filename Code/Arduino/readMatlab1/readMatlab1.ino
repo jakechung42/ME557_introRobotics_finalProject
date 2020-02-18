@@ -70,7 +70,7 @@ void loop(){
     {
         id = firstByte;
 
-        while(Serial.available() <= 1) {}
+        while(Serial.available() <= 1) {} //wait for the next 2 bytes for the position
         
         //if(Serial.available() > 1) //wait for the next 2 bytes to read
         //{   
