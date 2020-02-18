@@ -14,6 +14,7 @@ DynamixelWorkbench dxl_wb;
 int high = -1;
 int low = -1;
 uint8_t id;
+uint8_t firstByte;
 uint32_t get_data_1;
 uint32_t get_data_2;
 
@@ -50,24 +51,42 @@ void setup() {
 
 void loop(){
 
-  //check to see if there's data in the buffer
-  if(Serial.available() > 2)
+  //read the first byte to see if wants to move or get position.
+  if(Serial.available() > 0)
   {
-    id = Serial.read();
-    low = Serial.read();
-    high = Serial.read();
-    
-    
-    //control the motor from serial communication
-    dxl_wb.goalPosition(id, (int32_t)(low+high*256));
-    delay(200);
+    firstByte = Serial.read(); //read the first byte.
+    if (firstByte > (uint8_t)7)
+    {
+        //decompose first byte to get the id
+        id = firstByte - 8;
+        //read the register and send the position back to serial
+        dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
+        dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
+        //write position back to serial
+        Serial.write((uint8_t)get_data_1);
+        Serial.write((uint8_t)get_data_2);
+    }
+    else //otherwise read the byte and firstByte would just be the motor ID
+    {
+        id = firstByte;
 
-    //check position of the dynamixel
-    dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
-    dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
-
-    //write position back to serial
-    Serial.write((uint8_t)get_data_1);
-    Serial.write((uint8_t)get_data_2);
+        while(Serial.available() <= 1) {} //wait for the next 2 bytes for the position
+        
+        //if(Serial.available() > 1) //wait for the next 2 bytes to read
+        //{   
+            low = Serial.read();
+            high = Serial.read();
+            //control the motor as requested in the serial
+            dxl_wb.goalPosition(id, (int32_t)(low+high*256));
+            delay(200); //change the delay to potentially make it move faster. Need to experiment with this value
+            //check position of the dynamixel
+            dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
+            dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
+            //write position back to serial
+            Serial.write((uint8_t)get_data_1);
+            Serial.write((uint8_t)get_data_2);
+        //}
+        
+    }
   }
 }
