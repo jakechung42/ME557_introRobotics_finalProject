@@ -5,7 +5,7 @@ DynamixelWorkbench dxl_wb;
 
 void setup() {
   //set ID for the Dynamixels
-  uint8_t D1 = 3;
+  uint8_t D1 = 1;
 
   //initialize the AX12's
   dxl_wb.init("1", 1000000); //always set this to be 1
@@ -15,7 +15,7 @@ void setup() {
   dxl_wb.ping(D1, &model_number1);
     
   //center the motors
-  dxl_wb.goalPosition(D1, (int32_t)512);
+  dxl_wb.goalPosition(D1, (int32_t)200);
   delay(500);
 }
 
