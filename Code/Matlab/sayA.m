@@ -9,7 +9,7 @@ posSet(s, 2, 2772);
 
 %go slow for the second motor
 %set increment 
-numStp = 20;
+numStp = 10;
 for i = 0:numStp
     step = 512+i*(843-512)/numStp;
     posSet(s, 4, step);
