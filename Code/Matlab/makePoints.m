@@ -18,8 +18,8 @@ while (i ~= (length(matrix(:,1))))
         list = [list;[-999,-999,-999]];
     else
         %define the first and second vector
-        vec1 = matrix(i,:)
-        vec2 = matrix(i+1,:)
+        vec1 = matrix(i,:);
+        vec2 = matrix(i+1,:);
         %get the legnth between 
         L = norm(vec2-vec1);
         %np is the number of points between each vertex np
@@ -43,3 +43,4 @@ end
 %clean up list
 list = list(2:end,:);
 list(end,:) = matrix(end,:);
+end
