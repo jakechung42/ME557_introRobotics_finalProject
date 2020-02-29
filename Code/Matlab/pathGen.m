@@ -70,15 +70,19 @@ while (i ~= (length(disCharArr(:,1)))-1)
     if disCharArr(i,1)==-999
         path = liftPen(disCharArr(i-1,:), disCharArr(i+1,:), thetaList(i,:), Slist, M);
         i = i+1;
+        iTheta = path(end,:);
+        thetaList = [thetaList; path];
     else 
         [path, sucess] = IKinSpace(Slist, M, buildT(disCharArr(i,:)), iTheta, ew, ev);
         if sucess == 0
-            fprintf('Fail to make path!');
-            pause
+            fprintf('Fail to make path!\n');
+            return
+        else 
+            iTheta = path;
+            thetaList = [thetaList; path'];
         end
     end
-    iTheta = path;
-    thetaList = [thetaList; path'];
+    disCharArr(i,:)
     i = i+1;
 end
 thetaList = thetaList(2:end,:);
@@ -91,17 +95,18 @@ function[out] = liftPen(p1, p2, preTheta, Slist, M)
 %p1 is the point on the board 
 %p2 is the next point that the tip of then pen needs to move to
 %lift the pen from the surface of the whiteboard
-p1(1,2) = p1(1,2)-3 %move away from the board 10mm
+p1(1,2) = p1(1,2)-20 %move away from the board some amount
 p2
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 4; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 3; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
-ew = 0.1;
-ev = 0.1;
+ew = 1;
+ev = 1;
 out = [0, 0, 0, 0, 0];
+preTheta'
 %first the tip of the pen has to move to the new p1 off of the whiteboard
-buildT(p1)
+buildT(p1);
 [path1st, sucess] = IKinSpace(Slist, M, buildT(p1), preTheta', ew, ev);
 if sucess == 0
     fprintf('Fail to make path for intial point for lifting pen!\n')
@@ -111,19 +116,19 @@ else
 end
 for i = 1:np
     i
-    stp = p1+uv*dL;
+    stp = p1+i*uv*dL;
     buildT(stp)
-    [path, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta', ew, ev);
+    [path, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta, ew, ev);
     if sucess == 0
         fprintf('Fail to make path for lift pen!\n')
         return;
     end
     path = path';
     out(end+1,:) = path;
-    preTheta = path; %give new initial guess
+    preTheta = path'; %give new initial guess
 end
-out = out(:, 2:end);
-out = [path1st;out];
+out = out(2:end,:)
+out = [path1st';out];
 end
 
 %% This function builds the T matrix using the "standard" orientation and the input translation vector
