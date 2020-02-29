@@ -47,4 +47,13 @@ end
 plot3(T(1,:),T(2,:),T(3,:),'o-')
 T = T';
 grid on
+xlabel('x')
+ylabel('y')
+zlabel('z')
+figure %plot x-z
+plot(T(:,1), T(:,3),'o-')
+T(1,:)
+% xlim([-16 40])
+% ylim([-10 50])
+grid on
 end
