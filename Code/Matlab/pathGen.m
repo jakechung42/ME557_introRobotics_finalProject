@@ -42,6 +42,7 @@ w5 = [1;0;0];
 v5 = cross(r5, w5);
 %The M vector describes the end affector's position in the home position. 
 M=[1,0,0,0;0,1,0,0;0,0,1,363.8+166.4;0,0,0,1];
+
 %Define the screw axes for each of the motors:
 S1 = [w1;v1];
 S2 = [w2;v2];
@@ -54,7 +55,7 @@ Slist=[S1,S2,S3,S4,S5];
 disCharArr = makePoints(charArr);
 %define IKinSpace characteristics
 ew = 1;
-ev = 1;
+ev = 0.01;
 %initiate the counting variable
 i = 1;
 %need to determine theta list by randomly choosing the initial value
@@ -67,10 +68,11 @@ end
 iTheta = path;
 while (i ~= (length(disCharArr(:,1)))-1)
     i
+    disCharArr(i,:)
     if disCharArr(i,1)==-999
         path = liftPen(disCharArr(i-1,:), disCharArr(i+1,:), thetaList(i,:), Slist, M);
         i = i+1;
-        iTheta = path(end,:);
+        iTheta = path(end,:)';
         thetaList = [thetaList; path];
     else 
         [path, sucess] = IKinSpace(Slist, M, buildT(disCharArr(i,:)), iTheta, ew, ev);
@@ -80,10 +82,9 @@ while (i ~= (length(disCharArr(:,1)))-1)
         else 
             iTheta = path;
             thetaList = [thetaList; path'];
+            i = i+1;
         end
     end
-    disCharArr(i,:)
-    i = i+1;
 end
 thetaList = thetaList(2:end,:);
 thetaList = angLim(thetaList);
@@ -95,18 +96,15 @@ function[out] = liftPen(p1, p2, preTheta, Slist, M)
 %p1 is the point on the board 
 %p2 is the next point that the tip of then pen needs to move to
 %lift the pen from the surface of the whiteboard
-p1(1,2) = p1(1,2)-20 %move away from the board some amount
-p2
+p1(1,2) = p1(1,2)-10; %move away from the board some amount
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 3; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 5; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 ew = 1;
-ev = 1;
+ev = 0.1;
 out = [0, 0, 0, 0, 0];
-preTheta'
 %first the tip of the pen has to move to the new p1 off of the whiteboard
-buildT(p1);
 [path1st, sucess] = IKinSpace(Slist, M, buildT(p1), preTheta', ew, ev);
 if sucess == 0
     fprintf('Fail to make path for intial point for lifting pen!\n')
@@ -114,10 +112,9 @@ if sucess == 0
 else 
     preTheta = path1st;
 end
+%start inverse kinematics for the rest of the path to the next point
 for i = 1:np
-    i
     stp = p1+i*uv*dL;
-    buildT(stp)
     [path, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta, ew, ev);
     if sucess == 0
         fprintf('Fail to make path for lift pen!\n')
@@ -127,7 +124,7 @@ for i = 1:np
     out(end+1,:) = path;
     preTheta = path'; %give new initial guess
 end
-out = out(2:end,:)
+out = out(2:end,:);
 out = [path1st';out];
 end
 
