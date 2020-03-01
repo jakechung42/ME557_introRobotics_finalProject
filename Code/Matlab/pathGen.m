@@ -1,4 +1,4 @@
-%function[thetaList] = pathGen(charArr)
+function[thetaList] = pathGen(charArr)
 %this function input is the character coordinates. The function
 %generates the thetaList for the arm to move.
 %Author: Jake Chung
@@ -6,19 +6,19 @@
 %Introduction to Robotics
 
 %the charArr input has -999 in the array. This -999 is to signify that the
-%pen has to lift. Need to program this in the inverse kinematics.
+%pen has to lift. The liftPen function is called when -999 value is
+%encountered
 
-%first need to discretize the points.
-%can change the discretize resoltion in the function
+%uncomment this section for testing
 %[A,B,C,D,E,F,G,H,I,J] = trans(400);
-charArr =      [0   400     0;...
-     10   400     20;...
-     20   400     40;...
-     30   400     20;...
-     40   400     0;...
-  -999   400  -999;...
-     30   400     20;...
-     10   400     20];
+% charArr =      [0   400     0;...
+%      10   400     20;...
+%      20   400     40;...
+%      30   400     20;...
+%      40   400     0;...
+%   -999   400  -999;...
+%      30   400     20;...
+%      10   400     20];
 %define the screw matrix, this is from the physical arm.
 %For joint 1:
 r1 = [0;0;0];
@@ -42,7 +42,6 @@ w5 = [1;0;0];
 v5 = cross(r5, w5);
 %The M vector describes the end affector's position in the home position. 
 M=[1,0,0,0;0,1,0,0;0,0,1,363.8+166.4;0,0,0,1];
-
 %Define the screw axes for each of the motors:
 S1 = [w1;v1];
 S2 = [w2;v2];
@@ -51,6 +50,7 @@ S4 = [w4;v4];
 S5 = [w5;v5];
 %Slist is a row vector contains all of your s vectors.
 Slist=[S1,S2,S3,S4,S5];
+
 %discretize the input character array
 disCharArr = makePoints(charArr);
 %define IKinSpace characteristics
@@ -67,8 +67,6 @@ while (sucess ~= 1)
 end
 iTheta = path;
 while (i ~= (length(disCharArr(:,1)))-1)
-    i
-    disCharArr(i,:)
     if disCharArr(i,1)==-999
         path = liftPen(disCharArr(i-1,:), disCharArr(i+1,:), thetaList(i,:), Slist, M);
         i = i+1;
@@ -88,7 +86,7 @@ while (i ~= (length(disCharArr(:,1)))-1)
 end
 thetaList = thetaList(2:end,:);
 thetaList = angLim(thetaList);
-%end
+end
 
 %% This function builds the T matrix using the "standard" orientation and the input translation vector
 %the rotation matrix is R = [1 0 0; 0 0 -1; 0 1 0]
