@@ -21,11 +21,11 @@ uint32_t get_data_2;
 void setup() {
   //set ID for the Dynamixels
   uint8_t D1 = 1;
-  
   uint8_t D2 = 2;
   uint8_t D3 = 3;
   uint8_t D4 = 4;
   uint8_t D5 = 5;
+  uint8_t D6 = 6;
   
   //initialize the AX12's
   dxl_wb.init("1", 1000000); //always set this to be 1
@@ -45,8 +45,11 @@ void setup() {
 
   uint16_t model_number5 = 0;
   dxl_wb.ping(D5, &model_number5);
+
+  uint16_t model_number6 = 0;
+  dxl_wb.ping(D6, &model_number6);
  
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop(){
