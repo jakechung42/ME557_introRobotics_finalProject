@@ -16,11 +16,11 @@ function[out] = liftPen(p1, p2, preTheta, Slist, M)
 
 
 %lift the pen from the surface of the whiteboard
-amountMoveAway = 5;
+amountMoveAway = 35;
 p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 4; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 7; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 ew = 1;
 ev = 0.1;
