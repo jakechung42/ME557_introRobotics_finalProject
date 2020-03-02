@@ -1,4 +1,4 @@
-function[thetaList] = pathGen(charArr)
+function[thetaList] = pathGen(s, charArr)
 %this function input is the character coordinates. The function
 %generates the thetaList for the arm to move.
 %Author: Jake Chung
@@ -56,37 +56,38 @@ S6 = [w6;v6];
 %Slist is a row vector contains all of your s vectors.
 Slist=[S1,S2,S3,S4,S5,S6];
 
-%discretize the input character array
-disCharArr = makePoints(charArr); %comment this out when Johnathan's code is done.
 %define IKinSpace characteristics
 ew = 1;
-ev = 0.01;
+ev = 0.1;
+
+%determine the very first point to start writing by using the current
+%postion and then discritize the the board to start writing.
+% curTheta = getAllAngle(s); %comment this out for test run without the arm
+curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment this out for real run
+curPos = FKinSpace(M, Slist, curTheta);
+curPos = curPos(1:3,4)'; %get the current linear position
+firstPath = makePoints([curPos;charArr(1,:)]); %make the first path to go to the first point of the first letter.
+thetaList = zeros(6, length(firstPath(:,1)));
+thetaList(:,1) = curTheta;
+for i= 2:length(firstPath(:,1)) %start from 2 because the first theta is already the current theta
+    [thetaList(:,i), success] = IKinSpace(Slist, M, buildT(firstPath(i,:)), thetaList(:,i-1), ew, ev);
+    if success == 0
+        fprintf('Generate path to first point fail. Check config!\n');
+        return;
+    end
+end
+iTheta = thetaList(:,end);
+thetaList = thetaList';
 %initiate the counting variable
 i = 1;
-%need to determine theta list by randomly choosing the initial value
-% success = 0;
-thetaList = [0 0 0 0 0 0];
-% while (success ~= 1)
-%     iTheta = -2*pi + (2*pi--2*pi).*rand(6,1);
-%     [path, success] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
-% end
-%determine the very first point to start writing by using the initial
-%positions
-iTheta = [0.9035  -1.1045 0.3620 -0.8406 0.7547 0.3129]; %obtain from experimental might change if need to
-[path, success] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
-if success == 0
-    fprintf('Cannot get the first point. Check iTheta\n')
-    return
-end
-iTheta = path;
-while (i ~= (length(disCharArr(:,1)))-1)
-    if disCharArr(i,1)==-999
-        path = liftPen(disCharArr(i-1,:), disCharArr(i+1,:), thetaList(i,:), Slist, M);
+while (i ~= (length(charArr(:,1)))-1)
+    if charArr(i,1)==-999
+        path = liftPen(charArr(i-1,:), charArr(i+1,:), thetaList(i,:), Slist, M);
         i = i+1;
         iTheta = path(end,:)';
         thetaList = [thetaList; path];
     else 
-        [path, success] = IKinSpace(Slist, M, buildT(disCharArr(i,:)), iTheta, ew, ev);
+        [path, success] = IKinSpace(Slist, M, buildT(charArr(i,:)), iTheta, ew, ev);
         if success == 0
             fprintf('Fail to make path!\n');
             return
