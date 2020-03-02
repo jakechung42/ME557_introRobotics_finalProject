@@ -60,7 +60,7 @@ for i = 1:6
                 return;
             end
         case 6
-            if upBound(i)>AXbit2rad(847)
+            if upBound(i)>AXbit2rad(750)
                 fprintf('%d Out of bound\n', i)
                 outOfBound = 1;
                 return;
