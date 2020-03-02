@@ -15,9 +15,20 @@ depth = 400; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, 400);
 %{
-    Section 2: generate the angles by using inversed kinematics
+    Section 2: move the pen into writing position
 %}
-path = pathGen(coord); %the screw matrix is builts in the pathGen function
+
+%{
+    Section 3: generate thetaList to write the letter starting from the
+    writing postion.
+%}
+%sCloseAll();
+COM = 'COM10';
+BaudRate = 115200;
+s = serial(COM, 'BaudRate', BaudRate);
+% fopen(s);
+path = pathGen(s, coord); %the screw matrix is builts in the pathGen function
+outOfBound = isOutOfBound(path);
 testTheta(path);
 %{
     Section 3: send the angles to the OpenCM
