@@ -16,11 +16,11 @@ function[out] = liftPen(p1, p2, preTheta, Slist, M)
 
 
 %lift the pen from the surface of the whiteboard
-amountMoveAway = 10;
+amountMoveAway = 5;
 p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 8; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 4; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 ew = 1;
 ev = 0.1;
@@ -47,4 +47,11 @@ for i = 1:np
 end
 out = out(2:end,:);
 out = [path1st';out];
+end
+
+%% This function builds the T matrix using the "standard" orientation and the input translation vector
+%the rotation matrix is R = [1 0 0; 0 0 -1; 0 1 0]
+function[T_out] = buildT(vec)
+R = [1 0 0; 0 0 -1; 0 1 0]';
+T_out = [[R, vec']; 0 0 0 1];
 end
