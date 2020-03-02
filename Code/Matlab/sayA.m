@@ -9,16 +9,16 @@ posSet(s, 2, 2772);
 
 %go slow for the second motor
 %set increment 
-numStp = 10;
+numStp = 15;
 for i = 0:numStp
-    step = 512+i*(843-512)/numStp;
+    step = 512-i*(512-250)/numStp;
     posSet(s, 4, step);
 end
 
 %go slow for the third motor
 for i = 0:numStp
-    step = 512-i*(512-205)/numStp;
-    posSet(s, 5, step);
+    step = 512+i*(691-512)/numStp;
+    posSet(s, 6, step);
 end
 
 %in position for pen insertion. Now wait for user to releaser to home
@@ -26,7 +26,7 @@ end
 fprintf('Press any key to go back to home position.\n')
 pause;
 %bring the end effector back quickly to grip onto the pen
-posSet(s, 5, 512);
+posSet(s, 6, 512);
 pause(1);
 currentPos4 = posAsk(s, 4);
 pause(1);
