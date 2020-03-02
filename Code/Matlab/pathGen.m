@@ -33,23 +33,28 @@ r3 = [0;0;132.4];
 w3 = [0;1;0];
 v3 = cross(r3, w3);
 %For joint 4:
-r4 = [0;0;200.8+45];%add another piece to increase the length a link
+r4 = [0;0;246.8];
 w4 = [1;0;0];
 v4 = cross(r4, w4);
 %For joint 5:
-r5 = [0;0;363.8+45];
-w5 = [1;0;0];
+r5 = [0;0;316.6];
+w5 = [0;1;0];
 v5 = cross(r5, w5);
+%For joint 5:
+r6 = [0;0;385.8];
+w6 = [1;0;0];
+v6 = cross(r6, w6);
 %The M vector describes the end affector's position in the home position. 
-M=[1,0,0,0;0,1,0,0;0,0,1,363.8+166.4+45;0,0,0,1];
+M=[[1,0,0,0];[0,1,0,0];[0,0,1,385.8+159.7];[0,0,0,1]];
 %Define the screw axes for each of the motors:
 S1 = [w1;v1];
 S2 = [w2;v2];
 S3 = [w3;v3];
 S4 = [w4;v4];
 S5 = [w5;v5];
+S6 = [w6;v6];
 %Slist is a row vector contains all of your s vectors.
-Slist=[S1,S2,S3,S4,S5];
+Slist=[S1,S2,S3,S4,S5,S6];
 
 %discretize the input character array
 disCharArr = makePoints(charArr); %comment this out when Johnathan's code is done.
@@ -59,11 +64,19 @@ ev = 0.01;
 %initiate the counting variable
 i = 1;
 %need to determine theta list by randomly choosing the initial value
-sucess = 0;
-thetaList = [0 0 0 0 0];
-while (sucess ~= 1)
-    iTheta = -2*pi + (2*pi--2*pi).*rand(6,1);
-    [path, sucess] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
+% success = 0;
+thetaList = [0 0 0 0 0 0];
+% while (success ~= 1)
+%     iTheta = -2*pi + (2*pi--2*pi).*rand(6,1);
+%     [path, success] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
+% end
+%determine the very first point to start writing by using the initial
+%positions
+iTheta = [0.9035  -1.1045 0.3620 -0.8406 0.7547 0.3129]; %obtain from experimental might change if need to
+[path, success] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
+if success == 0
+    fprintf('Cannot get the first point. Check iTheta\n')
+    return
 end
 iTheta = path;
 while (i ~= (length(disCharArr(:,1)))-1)
@@ -73,8 +86,8 @@ while (i ~= (length(disCharArr(:,1)))-1)
         iTheta = path(end,:)';
         thetaList = [thetaList; path];
     else 
-        [path, sucess] = IKinSpace(Slist, M, buildT(disCharArr(i,:)), iTheta, ew, ev);
-        if sucess == 0
+        [path, success] = IKinSpace(Slist, M, buildT(disCharArr(i,:)), iTheta, ew, ev);
+        if success == 0
             fprintf('Fail to make path!\n');
             return
         else 
