@@ -17,7 +17,7 @@ end
 
 %go slow for the third motor
 for i = 0:numStp
-    step = 512+i*(691-512)/numStp;
+    step = 512+i*(796-512)/numStp;
     posSet(s, 6, step);
 end
 
