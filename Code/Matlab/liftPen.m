@@ -16,29 +16,38 @@ function[out] = liftPen(p1, p2, preTheta, Slist, M)
 
 
 %lift the pen from the surface of the whiteboard
-amountMoveAway = 35;
-p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
-L = norm(p2-p1); %get the length of the vector to move to the next vertex
-uv = (p2-p1)/L; %unit vector
-np = 7; %number of points to get to p2 increase this number if life pen start moving chaotically
-dL = L/np;
 ew = 1;
 ev = 0.1;
-out = [0, 0, 0, 0, 0, 0];
+amountMoveAway = 25;
+ip1 = p1;
+p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
 %first the tip of the pen has to move to the new p1 off of the whiteboard
-[path1st, sucess] = IKinSpace(Slist, M, buildT(p1), preTheta', ew, ev);
-if sucess == 0
-    fprintf('Fail to make path for intial point for lifting pen!\n')
-    return;
-else 
-    preTheta = path1st;
+np = 7; %the resolution for lifting up
+path1st = zeros(6, np);
+for i = 1:np
+    stp = ip1+i*(p1-ip1)/np;
+    [temp, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta', ew, ev);
+    if sucess == 0
+        fprintf('Fail to make path for intial point for lifting pen!\n')
+        path1st = 0;
+        return;
+    end
+    path1st(:,i) = temp;
+    preTheta = temp';
 end
+L = norm(p2-p1); %get the length of the vector to move to the next vertex
+uv = (p2-p1)/L; %unit vector
+np = 10; %number of points to get to p2 increase this number if life pen start moving chaotically
+dL = L/np;
+out = [0, 0, 0, 0, 0, 0];
+preTheta = path1st(:,end);
 %start inverse kinematics for the rest of the path to the next point
 for i = 1:np
     stp = p1+i*uv*dL;
     [path, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta, ew, ev);
     if sucess == 0
         fprintf('Fail to make path for lift pen!\n')
+        path = 0;
         return;
     end
     path = path';
