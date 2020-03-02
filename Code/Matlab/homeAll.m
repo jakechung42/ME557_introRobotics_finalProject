@@ -8,7 +8,7 @@ end
 
 for i = 1:2
     temp = posSet(s, i, 2048);
-    pause(0.8);
+    pause(0.3);
 end
 
 end
