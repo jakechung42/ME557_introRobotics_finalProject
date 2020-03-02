@@ -24,7 +24,7 @@ np = 8; %number of points to get to p2 increase this number if life pen start mo
 dL = L/np;
 ew = 1;
 ev = 0.1;
-out = [0, 0, 0, 0, 0];
+out = [0, 0, 0, 0, 0, 0];
 %first the tip of the pen has to move to the new p1 off of the whiteboard
 [path1st, sucess] = IKinSpace(Slist, M, buildT(p1), preTheta', ew, ev);
 if sucess == 0
