@@ -33,15 +33,15 @@ r3 = [0;0;132.4];
 w3 = [0;1;0];
 v3 = cross(r3, w3);
 %For joint 4:
-r4 = [0;0;200.8];%add another piece to increase the length a link
+r4 = [0;0;200.8+45];%add another piece to increase the length a link
 w4 = [1;0;0];
 v4 = cross(r4, w4);
 %For joint 5:
-r5 = [0;0;363.8];
+r5 = [0;0;363.8+45];
 w5 = [1;0;0];
 v5 = cross(r5, w5);
 %The M vector describes the end affector's position in the home position. 
-M=[1,0,0,0;0,1,0,0;0,0,1,363.8+166.4;0,0,0,1];
+M=[1,0,0,0;0,1,0,0;0,0,1,363.8+166.4+45;0,0,0,1];
 %Define the screw axes for each of the motors:
 S1 = [w1;v1];
 S2 = [w2;v2];
@@ -52,7 +52,7 @@ S5 = [w5;v5];
 Slist=[S1,S2,S3,S4,S5];
 
 %discretize the input character array
-disCharArr = makePoints(charArr);
+disCharArr = makePoints(charArr); %comment this out when Johnathan's code is done.
 %define IKinSpace characteristics
 ew = 1;
 ev = 0.01;
@@ -62,7 +62,7 @@ i = 1;
 sucess = 0;
 thetaList = [0 0 0 0 0];
 while (sucess ~= 1)
-    iTheta = -2*pi + (2*pi--2*pi).*rand(5,1);
+    iTheta = -2*pi + (2*pi--2*pi).*rand(6,1);
     [path, sucess] = IKinSpace(Slist, M, buildT(disCharArr(1,:)), iTheta, ew, ev);
 end
 iTheta = path;
@@ -98,7 +98,7 @@ end
 %% This function limit the output from path to be within the -2pi to 2pi limit
 function[path] = angLim(path)
 numVec = length(path(:,1)); %length of the input path matrix
-for m = 1:5
+for m = 1:6
     for n = 1:numVec
         if (abs(path(n,m))>2*pi)
             path(n, m) = rem(path(n,m),2*pi); %check and bring back to be within the limit
