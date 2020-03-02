@@ -4,6 +4,7 @@ function[ang_out] = getAllAngle(s)
 ang_out = zeros(6,1);
 for i=1:6
     ang_out(i,1) = posAsk(s,i);
+    pause(0.3);
 end
 end
 
