@@ -62,15 +62,16 @@ ev = 0.1;
 
 %determine the very first point to start writing by using the current
 %postion and then discritize the the board to start writing.
-curTheta = getAllAngle(s); %comment this out for test run without the arm
-curTheta(1) = MXbit2rad(curTheta(1));
-curTheta(2) = MXbit2rad(curTheta(2));
-curTheta(3) = AXbit2rad(curTheta(3));
-curTheta(4) = AXbit2rad(curTheta(4));
-curTheta(5) = AXbit2rad(curTheta(5));
-curTheta(6) = AXbit2rad(curTheta(6));
+% curTheta = getAllAngle(s); %comment this out for test run without the arm
+% curTheta(1) = MXbit2rad(curTheta(1));
+% curTheta(2) = MXbit2rad(curTheta(2));
+% curTheta(3) = AXbit2rad(curTheta(3));
+% curTheta(4) = AXbit2rad(curTheta(4));
+% curTheta(5) = AXbit2rad(curTheta(5));
+% curTheta(6) = AXbit2rad(curTheta(6));
 
-% curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment this out for real run
+curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment
+% this out for real run
 curPos = FKinSpace(M, Slist, curTheta);
 curPos = curPos(1:3,4)'; %get the current linear position
 firstPath = makePoints([curPos;charArr(1,:)]); %make the first path to go to the first point of the first letter.
@@ -88,16 +89,26 @@ thetaList = thetaList';
 %initiate the counting variable
 i = 1;
 while (i ~= (length(charArr(:,1)))-1)
-    if charArr(i,1)==-999
+    if charArr(i,1)==-999 %perform lift pen when for -999
         path = liftPen(charArr(i-1,:), charArr(i+1,:), thetaList(i,:), Slist, M);
         i = i+1;
         iTheta = path(end,:)';
         thetaList = [thetaList; path];
     else 
         [path, success] = IKinSpace(Slist, M, buildT(charArr(i,:)), iTheta, ew, ev);
-        if success == 0
-            fprintf('Fail to make path!\n');
-            return
+        if success == 0 %if cannot find path, perturb the initial guess to try to find path again
+            fprintf('Fail to make path, going to guess again!\n');
+            k = 1;
+            while (success==0)
+                perturb = 0.03+(0-0.03).*rand(6,1);
+                iTheta = iTheta+perturb;
+                [path, success] = IKinSpace(Slist, M, buildT(charArr(i,:)), iTheta, ew, ev);
+                if k == 10 %perturb it only 5 times
+                    fprintf('Still cannot get solution, cancel operation\n');
+                    return;
+                end
+                k=  k+1;
+            end
         else 
             iTheta = path;
             thetaList = [thetaList; path'];
