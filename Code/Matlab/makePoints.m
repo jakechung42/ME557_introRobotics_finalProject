@@ -8,7 +8,7 @@ function[list] = makePoints(matrix)
 % plot(matrix(:,1),matrix(:,2),'o')
 % xlim([-1 40])
 % ylim([-1 45])
-np=20;
+np=5;
 list = zeros(1,3);
 i=1;
 while (i ~= (length(matrix(:,1))))
