@@ -1,13 +1,13 @@
 %main program for the robot arm. 
 %it calls all the functions that we have done so far to draw the letters.
 
-sCloseAll();%close all previous ports before clearing variables
+% sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
 BaudRate = 115200;
 s = serial(COM, 'BaudRate', BaudRate);
-fopen(s);
+% fopen(s);
 %{
     Section 1: Inquire the user for 5 letters and map them to the pre-define
     grid. The output of this section is a nx3 matrix that contains the
@@ -15,14 +15,17 @@ fopen(s);
     scaling and calibration.
 %}
 scale = 50/4; %physical scale for the letters
-depth = 404; %get from the calibration
+depth = 398; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, 400);
 %{
     Section 2: move the pen into writing position
 %}
-homeAll(s)
-move2Write(s)
+% sayA(s)
+% homeAll(s)
+% move2Write(s)
+fprintf('Any key to start write, make sure that it'' in write position\n');
+pause;
 %{
     Section 3: generate thetaList to write the letter starting from the
     writing postion.
@@ -31,14 +34,15 @@ move2Write(s)
 path = pathGen(s, coord); %the screw matrix is builts in the pathGen function
 outOfBound = isOutOfBound(path);
 testTheta(path);
-pause;
+fprintf('Space bar to continue\n')
+pause();
 %check if out of bound
 if outOfBound == 1
     fprintf('Path is out of bound!\n')
     fclose(s);
     return;
 else 
-    fprintf('Begin write\n');
+    fprintf('Checked Bound, Begin write\n');
     
     %convert the radians to bit to write
     path(:,1) = MXrad2bit(path(:,1));
@@ -54,9 +58,8 @@ else
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
-        pause(0.1);
     end
-    fclose(s);
+%     fclose(s);
 end
 %{
     Section 3: send the angles to the OpenCM
