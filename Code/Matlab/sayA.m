@@ -9,7 +9,12 @@ posSet(s, 2, 2772);
 
 %go slow for the second motor
 %set increment 
-numStp = 15;
+numStp = 10;
+for i = 1:numStp
+    step = 2048+(2772-2048)/numStp;
+    posSet(s, 2, step);
+end
+pause(0.5);
 for i = 1:numStp
     step = 512-i*(512-250)/numStp;
     posSet(s, 4, step);
@@ -28,16 +33,16 @@ pause;
 %bring the end effector back quickly to grip onto the pen
 posSet(s, 6, 512);
 pause(1);
-currentPos4 = posAsk(s, 4)
+currentPos4 = posAsk(s, 4);
 pause(2);
-currentPos2 = posAsk(s, 2)
+currentPos2 = posAsk(s, 2);
 pause(1);
 for i = 1:numStp
     step4 = currentPos4-i*(currentPos4-512)/numStp;
-    step2 = currentPos2-i*(currentPos2-2048)/numStp
+    step2 = currentPos2-i*(currentPos2-2048)/numStp;
     posSet(s, 4, step4);
-    pause(0.5)
     posSet(s, 2, step2);
+    pause(0.7)
 end
 homeAll(s)
 end
