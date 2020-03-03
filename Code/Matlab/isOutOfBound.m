@@ -11,7 +11,7 @@ for i = 1:6
     switch i
         case 1
             if upBound(i)>MXbit2rad(4096)
-                fprintf('%d Out of bound\n', i)
+                fprintf('%d Out of bound \n', i)
                 outOfBound = 1;
                 return;
             elseif lowBound(i)<MXbit2rad(0)
