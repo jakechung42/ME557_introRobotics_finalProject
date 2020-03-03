@@ -81,7 +81,7 @@ void loop(){
             high = Serial.read();
             //control the motor as requested in the serial
             dxl_wb.goalPosition(id, (int32_t)(low+high*256));
-            delay(200); //change the delay to potentially make it move faster. Need to experiment with this value
+            delay(80); //change the delay to potentially make it move faster. Need to experiment with this value
             //check position of the dynamixel
             dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
             dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
