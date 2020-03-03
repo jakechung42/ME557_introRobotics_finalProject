@@ -22,7 +22,7 @@ amountMoveAway = 25;
 ip1 = p1;
 p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
 %first the tip of the pen has to move to the new p1 off of the whiteboard
-np = 7; %the resolution for lifting up
+np = 8; %the resolution for lifting up
 path1st = zeros(6, np);
 for i = 1:np
     stp = ip1+i*(p1-ip1)/np;
@@ -37,7 +37,7 @@ for i = 1:np
 end
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 15; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 14; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 out = [0, 0, 0, 0, 0, 0];
 preTheta = path1st(:,end);
