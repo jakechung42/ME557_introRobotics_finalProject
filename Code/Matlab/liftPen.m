@@ -37,7 +37,7 @@ for i = 1:np
 end
 L = norm(p2-p1); %get the length of the vector to move to the next vertex
 uv = (p2-p1)/L; %unit vector
-np = 14; %number of points to get to p2 increase this number if life pen start moving chaotically
+np = 10; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 out = [0, 0, 0, 0, 0, 0];
 preTheta = path1st(:,end);
