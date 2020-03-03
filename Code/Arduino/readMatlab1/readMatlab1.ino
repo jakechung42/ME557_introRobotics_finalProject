@@ -49,7 +49,7 @@ void setup() {
   uint16_t model_number6 = 0;
   dxl_wb.ping(D6, &model_number6);
  
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop(){
@@ -68,6 +68,7 @@ void loop(){
         //write position back to serial
         Serial.write((uint8_t)get_data_1);
         Serial.write((uint8_t)get_data_2);
+        delay(200);
     }
     else //otherwise read the byte and firstByte would just be the motor ID
     {
@@ -81,13 +82,13 @@ void loop(){
             high = Serial.read();
             //control the motor as requested in the serial
             dxl_wb.goalPosition(id, (int32_t)(low+high*256));
-            delay(80); //change the delay to potentially make it move faster. Need to experiment with this value
+            delay(100); //change the delay to potentially make it move faster. Need to experiment with this value
             //check position of the dynamixel
-            dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
-            dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
+            //dxl_wb.readRegister(id, (uint16_t)36, (uint16_t)1, &get_data_1);
+            //dxl_wb.readRegister(id, (uint16_t)37, (uint16_t)1, &get_data_2);
             //write position back to serial
-            Serial.write((uint8_t)get_data_1);
-            Serial.write((uint8_t)get_data_2);
+            //Serial.write((uint8_t)get_data_1);
+            //Serial.write((uint8_t)get_data_2);
         //}
         
     }
