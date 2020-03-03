@@ -1,4 +1,4 @@
-function[thetaList] = pathGen(s, charArr)
+function[thetaList] = pathGen(charArr)
 %this function input is the character coordinates. The function
 %generates the thetaList for the arm to move.
 %Author: Jake Chung
@@ -62,7 +62,8 @@ ev = 0.1;
 
 %determine the very first point to start writing by using the current
 %postion and then discritize the the board to start writing.
-% curTheta = getAllAngle(s); %comment this out for test run without the arm
+% curTheta = getAllAngle(s) %comment this out for test run without the arm
+% pause(4)
 % curTheta(1) = MXbit2rad(curTheta(1));
 % curTheta(2) = MXbit2rad(curTheta(2));
 % curTheta(3) = AXbit2rad(curTheta(3));
