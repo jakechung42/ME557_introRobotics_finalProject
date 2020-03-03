@@ -11,17 +11,20 @@ pause(1);
 
 %set motors 4 5 6 first.
 posSet(s, 6, 610);
-pause(0.5)
+pause(0.7)
 posSet(s, 5, 663);
-pause(0.5)
+pause(0.7)
 posSet(s, 4, 281);
-pause(0.5)
+pause(0.7)
 %motor 1 2 3 will go in steps
 n_step = 20;
 for i= 1:n_step
     posSet(s,3,i*(619-512)/n_step+512);
     posSet(s,2,2048-i*(2048-1584)/n_step);
     posSet(s,1,i*(2788-2048)/n_step+2048);
-    pause(0.3);
+    pause(0.6);
 end
+posSet(s,3,619);
+posSet(s,2,1584);
+posSet(s,1,2788);
 end
