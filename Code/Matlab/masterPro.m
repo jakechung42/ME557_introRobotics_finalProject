@@ -1,13 +1,13 @@
 %main program for the robot arm. 
 %it calls all the functions that we have done so far to draw the letters.
 
-% sCloseAll();%close all previous ports before clearing variables
+sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
 BaudRate = 115200;
 s = serial(COM, 'BaudRate', BaudRate);
-% fopen(s);
+fopen(s);
 %{
     Section 1: Inquire the user for 5 letters and map them to the pre-define
     grid. The output of this section is a nx3 matrix that contains the
@@ -15,27 +15,29 @@ s = serial(COM, 'BaudRate', BaudRate);
     scaling and calibration.
 %}
 scale = 50/4; %physical scale for the letters
-depth = 398; %get from the calibration
+depth = 400; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
-coord = shift(letter, scale, 400);
+coord = shift(letter, scale, depth);
 %{
-    Section 2: move the pen into writing position
+    Section 2: generate path to see if it's possible
 %}
-% sayA(s)
-% homeAll(s)
-% move2Write(s)
-fprintf('Any key to start write, make sure that it'' in write position\n');
-pause;
-%{
-    Section 3: generate thetaList to write the letter starting from the
-    writing postion.
-%}
-
-path = pathGen(s, coord); %the screw matrix is builts in the pathGen function
+fprintf('Generating path...\n')
+path = pathGen(coord); %the screw matrix is builts in the pathGen function
 outOfBound = isOutOfBound(path);
 testTheta(path);
-fprintf('Space bar to continue\n')
+fprintf('Space bar to continue to setting position for pen\n')
 pause();
+%{
+    Section 3: get pen ready for write
+%}
+sayA(s)
+fprintf('Done set pen. Home again\n')
+homeAll(s)
+fprintf('Move pen to write position\n')
+move2Write(s)
+fprintf('Any key to start write, make sure that it''s in write position\n');
+pause;
+
 
 %{
     Section 3: send the angles to the OpenCM
@@ -63,7 +65,7 @@ else
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
-        pause(0.3);
+        pause(0.23);
     end
     fclose(s);
 end
