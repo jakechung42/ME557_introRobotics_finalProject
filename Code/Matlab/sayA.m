@@ -3,7 +3,7 @@ function[] = sayA(s)
 
 %bring the arm to home position first
 homeAll(s);
-
+pause(0.2);
 %bring the arm to position for insertion 
 posSet(s, 2, 2772);
 
