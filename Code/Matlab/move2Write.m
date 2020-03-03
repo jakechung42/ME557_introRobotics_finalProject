@@ -6,16 +6,16 @@ function[] = move2Write(s)
 %Final project Intro to Robotics.
 
 %bring arm to home
-homeAll(s)
+homeSlow(s)
 pause(1);
 
 %set motors 4 5 6 first.
 posSet(s, 6, 610);
-pause(0.7)
+pause(1)
 posSet(s, 5, 663);
-pause(0.7)
+pause(1)
 posSet(s, 4, 281);
-pause(0.7)
+pause(1)
 %motor 1 2 3 will go in steps
 n_step = 20;
 for i= 1:n_step
@@ -25,6 +25,9 @@ for i= 1:n_step
     pause(0.6);
 end
 posSet(s,3,619);
+pause(0.5)
 posSet(s,2,1584);
+pause(0.5)
 posSet(s,1,2788);
+pause(0.5)
 end
