@@ -62,15 +62,15 @@ ev = 0.1;
 
 %determine the very first point to start writing by using the current
 %postion and then discritize the the board to start writing.
-% curTheta = getAllAngle(s); %comment this out for test run without the arm
-% curTheta(1) = MXbit2rad(curTheta(1));
-% curTheta(2) = MXbit2rad(curTheta(2));
-% curTheta(3) = AXbit2rad(curTheta(3));
-% curTheta(4) = AXbit2rad(curTheta(4));
-% curTheta(5) = AXbit2rad(curTheta(5));
-% curTheta(6) = AXbit2rad(curTheta(6));
+curTheta = getAllAngle(s); %comment this out for test run without the arm
+curTheta(1) = MXbit2rad(curTheta(1));
+curTheta(2) = MXbit2rad(curTheta(2));
+curTheta(3) = AXbit2rad(curTheta(3));
+curTheta(4) = AXbit2rad(curTheta(4));
+curTheta(5) = AXbit2rad(curTheta(5));
+curTheta(6) = AXbit2rad(curTheta(6));
 
-curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment
+% curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment
 % this out for real run
 curPos = FKinSpace(M, Slist, curTheta);
 curPos = curPos(1:3,4)'; %get the current linear position
