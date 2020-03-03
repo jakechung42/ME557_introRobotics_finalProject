@@ -4,22 +4,21 @@ function[] = sayA(s)
 %bring the arm to home position first
 homeAll(s);
 pause(0.2);
-%bring the arm to position for insertion 
-posSet(s, 2, 2772);
 
 %go slow for the second motor
 %set increment 
-numStp = 10;
+numStp = 7;
 for i = 1:numStp
-    step = 2048+(2772-2048)/numStp;
+    step = 2048+i*(2772-2048)/numStp;
     posSet(s, 2, step);
+    pause(0.5)
 end
-pause(0.5);
+pause(1);
 for i = 1:numStp
     step = 512-i*(512-250)/numStp;
     posSet(s, 4, step);
 end
-pause(0.5);
+pause(1);
 %go slow for the third motor
 for i = 1:numStp
     step = 512+i*(796-512)/numStp;
@@ -34,7 +33,7 @@ pause;
 posSet(s, 6, 512);
 pause(1);
 currentPos4 = posAsk(s, 4);
-pause(2);
+pause(1);
 currentPos2 = posAsk(s, 2);
 pause(1);
 for i = 1:numStp
