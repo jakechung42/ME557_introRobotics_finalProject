@@ -1,13 +1,13 @@
 %main program for the robot arm. 
 %it calls all the functions that we have done so far to draw the letters.
 
-% sCloseAll();%close all previous ports before clearing variables
+sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
 BaudRate = 115200;
 s = serial(COM, 'BaudRate', BaudRate);
-% fopen(s);
+fopen(s);
 %{
     Section 1: Inquire the user for 5 letters and map them to the pre-define
     grid. The output of this section is a nx3 matrix that contains the
@@ -21,9 +21,9 @@ coord = shift(letter, scale, 400);
 %{
     Section 2: move the pen into writing position
 %}
-% sayA(s)
-% homeAll(s)
-% move2Write(s)
+sayA(s)
+homeAll(s)
+move2Write(s)
 fprintf('Any key to start write, make sure that it'' in write position\n');
 pause;
 %{
@@ -58,8 +58,9 @@ else
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
+        pause(0.5);
     end
-%     fclose(s);
+    fclose(s);
 end
 %{
     Section 3: send the angles to the OpenCM
