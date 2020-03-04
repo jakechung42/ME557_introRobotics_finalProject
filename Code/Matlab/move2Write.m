@@ -6,7 +6,7 @@ function[] = move2Write(s)
 %Final project Intro to Robotics.
 
 %bring arm to home
-homeSlow(s)
+homeAll(s)
 pause(1);
 
 %set motors 4 5 6 first.
