@@ -1,13 +1,13 @@
 %main program for the robot arm. 
 %it calls all the functions that we have done so far to draw the letters.
 
-sCloseAll();%close all previous ports before clearing variables
+% sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
 BaudRate = 9600;
 s = serial(COM, 'BaudRate', BaudRate);
-fopen(s);
+% fopen(s);
 %{
     Section 1: Inquire the user for 5 letters and map them to the pre-define
     grid. The output of this section is a nx3 matrix that contains the
@@ -31,13 +31,11 @@ pause();
     Section 3: get pen ready for write
 %}
 sayA(s)
-fprintf('Done set pen. Home again\n')
-homeAll(s)
+fprintf('Done set pen.\n')
 fprintf('Move pen to write position\n')
 move2Write(s)
 fprintf('Any key to start write, make sure that it''s in write position\n');
 pause;
-
 
 %{
     Section 3: send the angles to the OpenCM
@@ -50,7 +48,6 @@ if outOfBound == 1
     return;
 else 
     fprintf('Checked Bound, Begin write\n');
-    
     %convert the radians to bit to write
     path(:,1) = MXrad2bit(path(:,1));
     path(:,2) = MXrad2bit(path(:,2));
