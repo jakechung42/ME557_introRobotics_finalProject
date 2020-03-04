@@ -51,14 +51,14 @@ for i = 1:L
     T_temp = FKinSpace(M, Slist, thetaList(i, :)');
     T(:,i) = T_temp(1:3,4);
 end
-plot3(T(1,:),T(2,:),T(3,:),'o-')
+plot3(T(1,:),T(2,:),T(3,:),'*-')
 T = T';
 grid on
 xlabel('x')
 ylabel('y')
 zlabel('z')
-figure %plot x-z
-plot(T(:,1), T(:,3),'o-')
+% figure %plot x-z
+% plot(T(:,1), T(:,3),'o-')
 % xlim([-16 40])
 % ylim([-10 50])
 grid on
