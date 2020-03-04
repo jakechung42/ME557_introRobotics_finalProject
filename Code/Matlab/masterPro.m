@@ -5,7 +5,7 @@ sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
-BaudRate = 115200;
+BaudRate = 9600;
 s = serial(COM, 'BaudRate', BaudRate);
 fopen(s);
 %{
@@ -15,7 +15,7 @@ fopen(s);
     scaling and calibration.
 %}
 scale = 50/4; %physical scale for the letters
-depth = 400; %get from the calibration
+depth = 395; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, depth);
 %{
@@ -59,6 +59,7 @@ else
     path(:,5) = AXrad2bit(path(:,5));
     path(:,6) = AXrad2bit(path(:,6));
     for i = 1:length(path(:,1))
+        fprintf('Loading %2.3f\n', i/length(path(:,1))*100);
         posSet(s,1,path(i,1));
         posSet(s,2,path(i,2));
         posSet(s,3,path(i,3));
