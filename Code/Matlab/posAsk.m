@@ -3,7 +3,7 @@ function[angle] = posAsk(serial, id)
 %the input is the serial and the motor id that is be asked for
 %prepare the "id" byte to send to OpenCM9.04
 sendByte = id+8;
-pause(3)
+pause(1.5)
 fwrite(serial, sendByte);
 %read the returned angular position
 angle = (fread(serial, 1) + fread(serial, 1)*256);
