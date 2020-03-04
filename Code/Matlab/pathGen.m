@@ -71,8 +71,7 @@ ev = 0.1;
 % curTheta(5) = AXbit2rad(curTheta(5));
 % curTheta(6) = AXbit2rad(curTheta(6));
 
-curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %comment
-% this out for real run
+curTheta = [1.1351; -0.7118; 0.6565; -1.4174; 0.9265; 0.6013]; %generate path from this location
 curPos = FKinSpace(M, Slist, curTheta);
 curPos = curPos(1:3,4)'; %get the current linear position
 firstPath = makePoints([curPos;charArr(1,:)]); %make the first path to go to the first point of the first letter.
