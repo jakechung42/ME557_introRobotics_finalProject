@@ -1,21 +1,21 @@
 %main program for the robot arm. 
 %it calls all the functions that we have done so far to draw the letters.
 
-% sCloseAll();%close all previous ports before clearing variables
+sCloseAll();%close all previous ports before clearing variables
 clc
 clear
 COM = 'COM12';
 BaudRate = 9600;
 s = serial(COM, 'BaudRate', BaudRate);
-% fopen(s);
+fopen(s);
 %{
     Section 1: Inquire the user for 5 letters and map them to the pre-define
     grid. The output of this section is a nx3 matrix that contains the
     discretized coordinates that make up the letters. This also includes the
     scaling and calibration.
 %}
-scale = 50/4; %physical scale for the letters
-depth = 395; %get from the calibration
+scale = 45/4; %physical scale for the letters
+depth = 400; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, depth);
 %{
@@ -59,11 +59,15 @@ else
         fprintf('Loading %2.3f\n', i/length(path(:,1))*100);
         posSet(s,1,path(i,1));
         posSet(s,2,path(i,2));
+        pause(0.02)
         posSet(s,3,path(i,3));
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
-        pause(0.23);
+        pause(0.05);
     end
+    fprintf('Done write\n')
+    homeAll(s)
     fclose(s);
+    
 end

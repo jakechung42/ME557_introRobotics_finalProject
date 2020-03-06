@@ -22,7 +22,7 @@ amountMoveAway = 25;
 ip1 = p1;
 p1(1,2) = p1(1,2)-amountMoveAway; %move away from the board some amount
 %first the tip of the pen has to move to the new p1 off of the whiteboard
-np = 8; %the resolution for lifting up
+np = 5; %the resolution for lifting up
 path1st = zeros(6, np);
 for i = 1:np
     stp = ip1+i*(p1-ip1)/np;
@@ -35,9 +35,11 @@ for i = 1:np
     path1st(:,i) = temp;
     preTheta = temp';
 end
-L = norm(p2-p1); %get the length of the vector to move to the next vertex
-uv = (p2-p1)/L; %unit vector
-np = 13; %number of points to get to p2 increase this number if life pen start moving chaotically
+fp2 = p2; %specify the point to move to for lift pen
+fp2(1,2) = fp2(1,2)-amountMoveAway;
+L = norm(fp2-p1); %get the length of the vector to move to the next vertex
+uv = (fp2-p1)/L; %unit vector
+np = 5; %number of points to get to p2 increase this number if life pen start moving chaotically
 dL = L/np;
 out = [0, 0, 0, 0, 0, 0];
 preTheta = path1st(:,end);
@@ -56,6 +58,22 @@ for i = 1:np
 end
 out = out(2:end,:);
 out = [path1st';out];
+%inverse kinematic to generate path to go back to the board. 
+np = 10; %the resolution for putting the pen back down down
+path_final = zeros(6, np);
+preTheta = out(end,:);
+for i = 1:np
+    stp = fp2+i*(p2-fp2)/np;
+    [temp, sucess] = IKinSpace(Slist, M, buildT(stp), preTheta', ew, ev);
+    if sucess == 0
+        fprintf('Fail to make path for final point for putting pen back down!\n')
+        path_final = 0;
+        return;
+    end
+    path_final(:,i) = temp;
+    preTheta = temp';
+end
+out = [out;path_final'];
 end
 
 %% This function builds the T matrix using the "standard" orientation and the input translation vector

@@ -20,11 +20,11 @@ pause(1)
 n_step = 8;
 for i= 1:n_step
     posSet(s,3,i*(619-512)/n_step+512);
-    pause(0.2);
+    pause(0.5);
     posSet(s,2,2048-i*(2048-1584)/n_step);
-    pause(0.2);
+    pause(0.8);
     posSet(s,1,i*(2788-2048)/n_step+2048);
-    pause(0.2);
+    pause(0.5);
 end
 posSet(s,3,619);
 pause(0.5)
