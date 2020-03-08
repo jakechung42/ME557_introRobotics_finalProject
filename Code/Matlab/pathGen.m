@@ -45,7 +45,7 @@ r6 = [0;0;385.8];
 w6 = [1;0;0];
 v6 = cross(r6, w6);
 %The M vector describes the end affector's position in the home position. 
-M=[[1,0,0,0];[0,1,0,0];[0,0,1,385.8+158];[0,0,0,1]];
+M=[[1,0,0,0];[0,1,0,-10];[0,0,1,385.8+158];[0,0,0,1]];
 %Define the screw axes for each of the motors:
 S1 = [w1;v1];
 S2 = [w2;v2];
