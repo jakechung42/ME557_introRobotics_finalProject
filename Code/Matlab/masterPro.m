@@ -14,14 +14,32 @@ fopen(s);
     discretized coordinates that make up the letters. This also includes the
     scaling and calibration.
 %}
+homeAll(s) 
+fprintf('calibration...\n')
+calibration2(s)
+depth_offset = input('Input the depth offset in mm: \n');
 scale = 45/4; %physical scale for the letters
-depth = 400; %get from the calibration
+depth = 404+depth_offset; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, depth);
 %{
     Section 2: generate path to see if it's possible
 %}
 fprintf('Generating path...\n')
+%the robot tends to push further in the middle of the board so an offset
+%can be set to correct this
+mid_offset = 6; %change if need to
+i = 1; %initiate counter
+while (i ~= length(coord(:,1)))
+    if coord(i,1) == -999
+        i = i+1;
+    else 
+        if coord(i,1)>-90 || coord(i,1)<90
+            coord(i,2) = coord(i,2)-mid_offset;
+        end
+        i = i+1;
+    end
+end
 path = pathGen(coord); %the screw matrix is builts in the pathGen function
 outOfBound = isOutOfBound(path);
 testTheta(path);
@@ -59,12 +77,11 @@ else
         fprintf('Loading %2.3f\n', i/length(path(:,1))*100);
         posSet(s,1,path(i,1));
         posSet(s,2,path(i,2));
-        pause(0.02)
         posSet(s,3,path(i,3));
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
-        pause(0.05);
+        pause(0.02);
     end
     fprintf('Done write\n')
     homeAll(s)
