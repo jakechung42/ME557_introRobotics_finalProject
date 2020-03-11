@@ -19,10 +19,13 @@ while(1)
     switch move
         case '1'
             posSet(s, 2, 1024);
+            posSet(s, 3, 205);
         case '2'
             posSet(s, 2, 2048);
+            posSet(s, 3, 220);
         case '3'
             posSet(s, 2, 2048+1024);
+            posSet(s, 3, 220);
         case '0'
             homeAll(s)
             return;
