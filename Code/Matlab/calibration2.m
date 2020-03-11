@@ -9,10 +9,10 @@ posSet(s, 1, 1024);
 fprintf('Press key to move to motor 3\n')
 pause
 posSet(s, 3, 220);
-n_step = 40;
+n_step = 5;
 for i= 1:n_step
     posSet(s,3,512-i*(512-220)/n_step);
-    pause(0.1)
+    pause(1)
 end
 while(1)
     move = input('press 1, 2, or 3 to move to postion 1, 2, or 3, press 0 to stop: \n', 's');
