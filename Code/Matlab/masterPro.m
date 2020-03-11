@@ -14,12 +14,18 @@ fopen(s);
     discretized coordinates that make up the letters. This also includes the
     scaling and calibration.
 %}
+fprintf('Press any key to begin.\n')
+pause
 homeAll(s) 
+fprintf('Press any key to start mounting pen.\n')
+pause
+sayA(s)
+fprintf('Done set pen.\n')
 fprintf('calibration...\n')
 calibration2(s)
 depth_offset = input('Input the depth offset in mm: \n');
 scale = 45/4; %physical scale for the letters
-depth = 404+depth_offset; %get from the calibration
+depth = 410+depth_offset; %get from the calibration
 letter = input('Enter the 5 capitalized letters as a string with no space in between: ', 's');
 coord = shift(letter, scale, depth);
 %{
@@ -28,14 +34,14 @@ coord = shift(letter, scale, depth);
 fprintf('Generating path...\n')
 %the robot tends to push further in the middle of the board so an offset
 %can be set to correct this
-mid_offset = 6; %change if need to
+mid_offset = -10; %change if need to
 i = 1; %initiate counter
 while (i ~= length(coord(:,1)))
     if coord(i,1) == -999
         i = i+1;
     else 
-        if coord(i,1)>-90 || coord(i,1)<90
-            coord(i,2) = coord(i,2)-mid_offset;
+        if coord(i,1)>-90 || coord(i,1)<0
+            coord(i,2) = coord(i,2)+mid_offset;
         end
         i = i+1;
     end
@@ -48,13 +54,13 @@ pause();
 %{
     Section 3: get pen ready for write
 %}
-sayA(s)
-fprintf('Done set pen.\n')
 fprintf('Move pen to write position\n')
 move2Write(s)
 fprintf('Any key to start write, make sure that it''s in write position\n');
 pause;
-
+instrreset;
+s = serial(COM, 'BaudRate', BaudRate);
+fopen(s);
 %{
     Section 3: send the angles to the OpenCM
 %}
@@ -81,7 +87,7 @@ else
         posSet(s,4,path(i,4));
         posSet(s,5,path(i,5));
         posSet(s,6,path(i,6));
-        pause(0.02);
+        pause(0.08);
     end
     fprintf('Done write\n')
     homeAll(s)
