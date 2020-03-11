@@ -17,11 +17,13 @@ pause(1);
 for i = 1:numStp
     step = 512-i*(512-250)/numStp;
     posSet(s, 4, step);
+    pause(0.2)
 end
 pause(1);
 for i = 1:numStp
     step = 512+i*(800-512)/numStp;
     posSet(s, 6, step);
+    pause(0.2)
 end
 
 %in position for pen insertion. Now wait for user to releaser to home
@@ -31,16 +33,13 @@ pause;
 %bring the end effector back quickly to grip onto the pen
 posSet(s, 6, 512);
 pause(1);
-currentPos4 = posAsk(s, 4);
-pause(1);
-currentPos2 = posAsk(s, 2);
-pause(1);
-for i = 1:numStp
-    step4 = currentPos4-i*(currentPos4-512)/numStp;
-    step2 = currentPos2-i*(currentPos2-2048)/numStp;
-    posSet(s, 4, step4);
-    posSet(s, 2, step2);
-    pause(0.7)
-end
 homeAll(s)
+% for i = 1:numStp
+%     step4 = currentPos4-i*(currentPos4-512)/numStp;
+%     step2 = currentPos2-i*(currentPos2-2048)/numStp;
+%     posSet(s, 4, step4);
+%     posSet(s, 2, step2);
+%     pause(0.7)
+% end
+% homeAll(s)
 end
